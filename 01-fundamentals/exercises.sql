@@ -14,6 +14,10 @@ WHERE c.Country = 'USA';
 
 -- 3. List products with a UnitPrice greater than 20, ordered from
 --    most expensive to cheapest.
+SELECT *
+FROM dbo.Products p
+WHERE p.UnitPrice > 20
+ORDER BY p.UnitPrice DESC;
 
 -- 4. List the distinct countries that customers are located in.
 
