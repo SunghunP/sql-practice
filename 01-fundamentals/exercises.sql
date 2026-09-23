@@ -30,6 +30,9 @@ ORDER BY p.UnitPrice ASC;
 
 -- 6. List employees hired after 2019-01-01, showing first name,
 --    last name, and hire date.
+SELECT e.FirstName, e.LastName, e.HireDate
+FROM dbo.Employees e
+WHERE e.HireDate > '2019-01-01';
 
 -- 7. List products whose name contains the word 'Set'.
 
