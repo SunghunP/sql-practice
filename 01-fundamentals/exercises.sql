@@ -35,6 +35,9 @@ FROM dbo.Employees e
 WHERE e.HireDate > '2019-01-01';
 
 -- 7. List products whose name contains the word 'Set'.
+SELECT p.ProductName
+FROM dbo.Products p
+WHERE p.ProductName LIKE '%Set%';
 
 -- 8. List orders that have never shipped (ShippedDate IS NULL).
 
