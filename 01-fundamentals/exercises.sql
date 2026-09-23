@@ -45,6 +45,15 @@ FROM dbo.Orders o
 WHERE o.ShippedDate IS NULL;
 
 -- 9. List customers in 'Germany' or 'France', ordered by City.
+SELECT *
+FROM dbo.Customers c
+WHERE c.Country = 'Germany' OR c.Country = 'France'
+ORDER BY c.Country;
+
+SELECT *
+FROM dbo.Customers c
+WHERE c.Country IN ('Germany', 'France')
+ORDER BY c.Country;
 
 -- 10. Show each product's name, price, and price rounded to the
 --     nearest whole dollar, aliased as RoundedPrice.
