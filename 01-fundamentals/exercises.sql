@@ -40,6 +40,9 @@ FROM dbo.Products p
 WHERE p.ProductName LIKE '%Set%';
 
 -- 8. List orders that have never shipped (ShippedDate IS NULL).
+SELECT * 
+FROM dbo.Orders o
+WHERE o.ShippedDate IS NULL;
 
 -- 9. List customers in 'Germany' or 'France', ordered by City.
 
