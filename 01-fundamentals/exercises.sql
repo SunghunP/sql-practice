@@ -5,7 +5,8 @@
    ============================================================ */
 
 -- 1. List all products with their name and unit price.
-
+SELECT p.ProductName, p.UnitPrice
+FROM dbo.Products p;
 -- 2. List all customers located in 'USA'.
 
 -- 3. List products with a UnitPrice greater than 20, ordered from

@@ -6,3 +6,4 @@ INNER JOIN facebook_posts p
 ON 
   r.post_id = p.post_id AND
   r.reaction = 'heart';
+
