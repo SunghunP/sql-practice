@@ -24,6 +24,9 @@ SELECT DISTINCT c.Country
 FROM dbo.Customers c;
 
 -- 5. Find the 5 cheapest products (name + price).
+SELECT TOP 5 p.ProductName, p.UnitPrice
+FROM dbo.Products p
+ORDER BY p.UnitPrice ASC;
 
 -- 6. List employees hired after 2019-01-01, showing first name,
 --    last name, and hire date.
