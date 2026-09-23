@@ -57,3 +57,8 @@ ORDER BY c.Country;
 
 -- 10. Show each product's name, price, and price rounded to the
 --     nearest whole dollar, aliased as RoundedPrice.
+SELECT 
+	p.ProductName, 
+	p.UnitPrice,
+	CAST(ROUND(p.UnitPrice, 0)AS INT) AS RoundedPrice
+FROM dbo.Products p;
