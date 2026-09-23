@@ -1,0 +1,81 @@
+USE SqlPractice;
+GO
+
+-- ============================================================
+-- 02-joins: INNER / LEFT / RIGHT / FULL, self-joins, multi-table
+-- ============================================================
+
+-- INNER JOIN
+
+-- 1. List each product's name and its category name.
+
+
+-- 2. List each order's OrderID and OrderDate along with the company
+--    name of the customer who placed it.
+
+
+-- 3. List each order's OrderID along with the first and last name of
+--    the employee who handled it.
+
+
+-- 4. List products in the 'Beverages' category (name + price),
+--    cheapest first. (Check Categories for the exact name.)
+
+
+-- LEFT / RIGHT JOIN
+
+-- 5. List every customer's company name and their OrderIDs, including
+--    customers who have never placed an order.
+
+
+-- 6. List customers who have never placed an order.
+
+
+-- 7. List products that have never been ordered (name only).
+
+
+-- 8. List every category and its products, including categories with
+--    no products. Rewrite it using RIGHT JOIN.
+
+
+-- Multi-table joins
+
+-- 9. For each order line, show OrderID, the customer's company name,
+--    the product name, Quantity, and the line's UnitPrice.
+
+
+-- 10. List the distinct product names that customers in Germany have
+--     ordered.
+
+
+-- 11. Show each order line with its category name and a computed
+--     LineTotal (Quantity * UnitPrice), for orders placed in 2021,
+--     highest LineTotal first.
+
+
+-- Self-join
+
+-- 12. List each employee's full name alongside their manager's full
+--     name. Include employees with no manager (manager shows NULL).
+
+
+-- 13. List employees who were hired before their own manager.
+
+
+-- FULL JOIN / CROSS JOIN
+
+-- 14. Using a FULL JOIN between Customers and Orders, list customers
+--     with no orders and orders with no matching customer. (Hint: filter
+--     on NULLs from either side. Is the second group even possible?
+--     Explain why or why not in a comment.)
+
+
+-- 15. Produce every combination of Category and Employee title
+--     (distinct titles) using a CROSS JOIN.
+
+
+-- Challenge
+
+-- 16. List the top 5 customers (company name) whose orders have the
+--     latest ShippedDate, showing company name, OrderID, and
+--     ShippedDate. Exclude unshipped orders.
