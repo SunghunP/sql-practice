@@ -93,7 +93,12 @@ ORDER BY  c.Country, C.City;
 
 -- C3a. List orders that have not shipped yet and were placed before
 --      2020-01-01. Show all columns, oldest first.
-
+SELECT *
+FROM dbo.Orders o
+WHERE 
+	o.ShippedDate IS NULL AND
+	o.OrderDate < '2020-01-01'
+ORDER BY o.OrderDate ASC;
 
 -- C3b. List the 5 most recently hired employees who were hired after
 --      2019-01-01. Show FullName (first + last name joined with a
