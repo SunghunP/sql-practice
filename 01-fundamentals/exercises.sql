@@ -84,7 +84,12 @@ ORDER BY p.UnitPrice DESC, p.ProductName;
 -- C2. List the distinct cities of customers in Germany, France, or
 --     the UK, excluding cities that start with 'B'. Sort by country,
 --     then city, and return only the first 10 rows.
-
+SELECT DISTINCT TOP 10 C.City, C.Country
+FROM dbo.Customers c
+WHERE 
+	c.Country IN ('Germany', 'France', 'UK') AND
+	c.City NOT LIKE 'B%'
+ORDER BY  c.Country, C.City;
 
 -- C3a. List orders that have not shipped yet and were placed before
 --      2020-01-01. Show all columns, oldest first.
