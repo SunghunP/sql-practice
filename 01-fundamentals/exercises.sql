@@ -62,3 +62,36 @@ SELECT
 	p.UnitPrice,
 	CAST(ROUND(p.UnitPrice, 0)AS INT) AS RoundedPrice
 FROM dbo.Products p;
+
+-- ============================================================
+-- Challenge questions (combine everything from 01-fundamentals)
+-- ============================================================
+
+-- C1. List the 3 most expensive products whose name contains 'Set'
+--     or 'Kit', with a price of at least 10. Show the name, the price,
+--     and the price rounded to a whole-dollar INT as RoundedPrice.
+--     Break ties by name A-Z.
+SELECT TOP 3
+	p.ProductName,
+	p.UnitPrice,
+	CAST(ROUND(p.UnitPrice, 0) AS INT) AS RoundedPrice
+FROM dbo.Products p
+WHERE 
+	(p.ProductName LIKE '%SET%' OR p.ProductName LIKE '%Kit%') AND
+	p.UnitPrice >= 10
+ORDER BY p.UnitPrice DESC, p.ProductName;
+
+-- C2. List the distinct cities of customers in Germany, France, or
+--     the UK, excluding cities that start with 'B'. Sort by country,
+--     then city, and return only the first 10 rows.
+
+
+-- C3a. List orders that have not shipped yet and were placed before
+--      2020-01-01. Show all columns, oldest first.
+
+
+-- C3b. List the 5 most recently hired employees who were hired after
+--      2019-01-01. Show FullName (first + last name joined with a
+--      space) and the hire date, newest first.
+
+
