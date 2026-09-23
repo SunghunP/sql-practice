@@ -20,6 +20,8 @@ WHERE p.UnitPrice > 20
 ORDER BY p.UnitPrice DESC;
 
 -- 4. List the distinct countries that customers are located in.
+SELECT DISTINCT c.Country
+FROM dbo.Customers c;
 
 -- 5. Find the 5 cheapest products (name + price).
 
