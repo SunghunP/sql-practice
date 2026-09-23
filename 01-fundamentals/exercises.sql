@@ -8,6 +8,9 @@
 SELECT p.ProductName, p.UnitPrice
 FROM dbo.Products p;
 -- 2. List all customers located in 'USA'.
+SELECT *
+FROM dbo.Customers c
+WHERE c.Country = 'USA';
 
 -- 3. List products with a UnitPrice greater than 20, ordered from
 --    most expensive to cheapest.
