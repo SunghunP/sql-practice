@@ -104,4 +104,9 @@ ORDER BY o.OrderDate ASC;
 --      2019-01-01. Show FullName (first + last name joined with a
 --      space) and the hire date, newest first.
 
-
+SELECT TOP 5 
+	(e.FirstName + ' ' + e.LastName) AS FullName,
+	e.HireDate
+FROM dbo.Employees e
+WHERE e.HireDate > '2019-01-01'
+ORDER BY e.HireDate DESC;
