@@ -29,7 +29,12 @@ ON o.EmployeeID = e.EmployeeID;
 
 -- 4. List products in the 'Beverages' category (name + price),
 --    cheapest first. (Check Categories for the exact name.)
-
+SELECT p.ProductName, p.UnitPrice
+FROM dbo.Products p
+INNER JOIN dbo.Categories c
+ON p.CategoryID= c.CategoryID
+WHERE c.CategoryName = 'Beverages'
+ORDER BY p.UnitPrice ASC;
 
 -- LEFT / RIGHT JOIN
 
