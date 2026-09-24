@@ -8,7 +8,10 @@ GO
 -- INNER JOIN
 
 -- 1. List each product's name and its category name.
-
+SELECT p.ProductName, c.CategoryName
+FROM dbo.Products p
+INNER JOIN dbo.Categories c
+ON p.CategoryID = c.CategoryID
 
 -- 2. List each order's OrderID and OrderDate along with the company
 --    name of the customer who placed it.
