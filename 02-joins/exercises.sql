@@ -11,11 +11,14 @@ GO
 SELECT p.ProductName, c.CategoryName
 FROM dbo.Products p
 INNER JOIN dbo.Categories c
-ON p.CategoryID = c.CategoryID
+ON p.CategoryID = c.CategoryID;
 
 -- 2. List each order's OrderID and OrderDate along with the company
 --    name of the customer who placed it.
-
+SELECT o.OrderID, o.OrderDate, c.CompanyName
+FROM dbo.Orders o
+INNER JOIN dbo.Customers c
+ON o.CustomerID = c.CustomerID;
 
 -- 3. List each order's OrderID along with the first and last name of
 --    the employee who handled it.
