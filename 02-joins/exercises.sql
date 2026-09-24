@@ -40,7 +40,10 @@ ORDER BY p.UnitPrice ASC;
 
 -- 5. List every customer's company name and their OrderIDs, including
 --    customers who have never placed an order.
-
+SELECT c.CompanyName, o.OrderID
+FROM dbo.Customers c
+LEFT JOIN dbo.Orders o
+ON c.CustomerID = o.CustomerID;
 
 -- 6. List customers who have never placed an order.
 
