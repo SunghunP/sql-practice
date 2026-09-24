@@ -22,7 +22,10 @@ ON o.CustomerID = c.CustomerID;
 
 -- 3. List each order's OrderID along with the first and last name of
 --    the employee who handled it.
-
+SELECT o.OrderID, e.FirstName, e.LastName
+FROM dbo.Orders o
+INNER JOIN dbo.Employees e
+ON o.EmployeeID = e.EmployeeID;
 
 -- 4. List products in the 'Beverages' category (name + price),
 --    cheapest first. (Check Categories for the exact name.)
