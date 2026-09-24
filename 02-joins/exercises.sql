@@ -46,7 +46,11 @@ LEFT JOIN dbo.Orders o
 ON c.CustomerID = o.CustomerID;
 
 -- 6. List customers who have never placed an order.
-
+SELECT c.CompanyName
+FROM dbo.Customers c
+LEFT JOIN dbo.Orders o
+ON c.CustomerID = o.CustomerID
+WHERE o.OrderID IS NULL;
 
 -- 7. List products that have never been ordered (name only).
 
