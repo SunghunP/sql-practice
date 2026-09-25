@@ -22,7 +22,9 @@ SELECT
 FROM dbo.Products p;
 
 -- 3. How many orders have not shipped yet?
-
+SELECT COUNT(*) AS NotShipped
+FROM dbo.Orders o
+WHERE o.ShippedDate IS NULL;
 
 -- 4. What is the total revenue across all order lines
 --    (SUM of Quantity * UnitPrice)?
