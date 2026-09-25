@@ -28,7 +28,8 @@ WHERE o.ShippedDate IS NULL;
 
 -- 4. What is the total revenue across all order lines
 --    (SUM of Quantity * UnitPrice)?
-
+SELECT SUM(od.Quantity * od.UnitPrice) AS TotalRevenue
+FROM dbo.OrderDetails od;
 
 -- GROUP BY
 
