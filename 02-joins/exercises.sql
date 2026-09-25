@@ -86,7 +86,15 @@ ON o.CustomerID = c.CustomerID;
 
 -- 10. List the distinct product names that customers in Germany have
 --     ordered.
-
+SELECT DISTINCT p.ProductName
+FROM dbo.Products p
+INNER JOIN dbo.OrderDetails od
+ON p.ProductID = od.ProductID
+INNER JOIN dbo.Orders o
+ON od.OrderID = o.OrderID
+INNER JOIN dbo.Customers c
+ON o.CustomerID = c.CustomerID
+WHERE c.Country = 'Germany';
 
 -- 11. Show each order line with its category name and a computed
 --     LineTotal (Quantity * UnitPrice), for orders placed in 2021,
