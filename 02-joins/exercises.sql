@@ -61,7 +61,15 @@ WHERE o.Quantity IS NULL;
 
 -- 8. List every category and its products, including categories with
 --    no products. Rewrite it using RIGHT JOIN.
+SELECT c.CategoryName, p.ProductName
+FROM dbo.Categories c
+LEFT JOIN dbo.Products p
+ON c.CategoryID = p.CategoryID;
 
+SELECT c.CategoryName, p.ProductName
+FROM dbo.Products p
+RIGHT JOIN dbo.Categories c
+ON p.CategoryID = c.CategoryID;
 
 -- Multi-table joins
 
