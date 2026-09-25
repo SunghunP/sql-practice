@@ -51,7 +51,12 @@ ON c.CategoryID = p.CategoryID
 GROUP BY c.CategoryID, c.CategoryName;
 
 -- 7. Show the number of orders per year (by OrderDate), oldest year first.
-
+SELECT 
+	DATEPART(YEAR, o.OrderDate) AS OrderYear, 
+	COUNT(o.OrderID) AS OrderCount
+FROM dbo.Orders o
+GROUP BY DATEPART(YEAR, o.OrderDate)
+ORDER BY DATEPART(YEAR, o.OrderDate) ASC;
 
 -- 8. Show total revenue per product (product name + revenue),
 --    highest first.
