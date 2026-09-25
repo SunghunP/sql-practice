@@ -15,7 +15,11 @@ FROM dbo.Customers c;
 
 -- 2. Show the lowest, highest, and average UnitPrice across all
 --    products (average rounded to 2 decimals).
-
+SELECT 
+	MIN(p.UnitPrice) AS MinPrice,
+	MAX(p.UnitPrice) AS MaxPrice,
+	AVG(p.UnitPrice) AS AvgPrice
+FROM dbo.Products p;
 
 -- 3. How many orders have not shipped yet?
 
