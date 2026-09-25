@@ -118,7 +118,12 @@ ORDER BY LineTotal DESC;
 
 -- 12. List each employee's full name alongside their manager's full
 --     name. Include employees with no manager (manager shows NULL).
-
+SELECT 
+	e.FirstName + ' ' + e.LastName AS FullName,
+	me.FirstName + ' ' + me.LastName AS ManagerName
+FROM dbo.Employees e
+LEFT JOIN dbo.Employees me
+ON e.ManagerID = me.EmployeeID;
 
 -- 13. List employees who were hired before their own manager.
 
