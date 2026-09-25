@@ -75,7 +75,14 @@ ON p.CategoryID = c.CategoryID;
 
 -- 9. For each order line, show OrderID, the customer's company name,
 --    the product name, Quantity, and the line's UnitPrice.
-
+SELECT od.OrderID, c.CompanyName, p.ProductName, od.Quantity, od.UnitPrice
+FROM dbo.OrderDetails od
+INNER JOIN dbo.Products p
+ON od.ProductID = p.ProductID
+INNER JOIN dbo.Orders o
+ON o.OrderID = od.OrderID
+INNER JOIN dbo.Customers c 
+ON o.CustomerID = c.CustomerID;
 
 -- 10. List the distinct product names that customers in Germany have
 --     ordered.
