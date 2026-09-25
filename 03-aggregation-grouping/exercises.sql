@@ -84,7 +84,10 @@ GROUP BY e.EmployeeID, e.FirstName, e.LastName;
 -- HAVING
 
 -- 10. List countries with more than 5 customers.
-
+SELECT c.Country
+FROM dbo.Customers c
+GROUP BY c.Country
+HAVING COUNT(c.CustomerID) > 5;
 
 -- 11. List products that have been ordered in total quantity of more
 --     than 100 units.
