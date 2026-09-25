@@ -101,7 +101,15 @@ GROUP BY p.ProductID, p.ProductName
 HAVING SUM(od.Quantity) > 100;
 
 -- 12. List categories whose average product UnitPrice is above 30.
-
+SELECT
+	c.CategoryID,
+	c.CategoryName,
+	AVG(p.UnitPrice) AS AverageUnitPrice
+FROM dbo.Categories c
+LEFT JOIN dbo.Products p
+ON c.CategoryID = p.CategoryID
+GROUP BY c.CategoryID, c.CategoryName
+HAVING AVG(p.UnitPrice) > 30;
 
 -- WHERE vs HAVING
 
