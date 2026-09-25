@@ -138,7 +138,14 @@ WHERE e.HireDate < me.HireDate;
 --     with no orders and orders with no matching customer. (Hint: filter
 --     on NULLs from either side. Is the second group even possible?
 --     Explain why or why not in a comment.)
+SELECT c.CompanyName, o.OrderID
+FROM dbo.Customers c
+FULL JOIN dbo.Orders o
+ON c.CustomerID = o.CustomerID
+WHERE o.OrderID IS NULL OR c.CustomerID IS NULL;
 
+-- The second group is not possible because Orders.CustomerID is a FK to Customers so the db rejects and an order pointing at a nonexistent customer. 
+-- The only exception is if Orders.CustomerID is nullable. 
 
 -- 15. Produce every combination of Category and Employee title
 --     (distinct titles) using a CROSS JOIN.
