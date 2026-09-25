@@ -158,3 +158,10 @@ CROSS JOIN dbo.Employees e;
 -- 16. List the top 5 customers (company name) whose orders have the
 --     latest ShippedDate, showing company name, OrderID, and
 --     ShippedDate. Exclude unshipped orders.
+
+SELECT TOP 5 c.CompanyName, o.OrderID, o.ShippedDate
+FROM dbo.Customers c
+INNER JOIN dbo.Orders o
+ON c.CustomerID = o.CustomerID
+WHERE o.ShippedDate IS NOT NULL
+ORDER BY o.ShippedDate DESC, o.OrderID;
