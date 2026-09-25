@@ -34,7 +34,12 @@ FROM dbo.OrderDetails od;
 -- GROUP BY
 
 -- 5. Show the number of customers per country, most customers first.
-
+SELECT 
+	c.Country, 
+	COUNT(c.CustomerID) AS NumberOfCustomers
+FROM dbo.Customers c
+GROUP BY c.Country
+ORDER BY NumberOfCustomers DESC;
 
 -- 6. Show the number of products per category (category name + count).
 
