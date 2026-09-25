@@ -126,7 +126,11 @@ LEFT JOIN dbo.Employees me
 ON e.ManagerID = me.EmployeeID;
 
 -- 13. List employees who were hired before their own manager.
-
+SELECT e.FirstName + ' ' + e.LastName AS Employee
+FROM dbo.Employees e
+INNER JOIN dbo.Employees me
+ON e.ManagerID = me.EmployeeID
+WHERE e.HireDate < me.HireDate;
 
 -- FULL JOIN / CROSS JOIN
 
