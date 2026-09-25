@@ -8,7 +8,10 @@ GO
 -- Basic aggregates
 
 -- 1. How many customers are there? How many distinct countries?
-
+SELECT 
+	COUNT(c.CustomerID) AS CustomerCount,
+	COUNT(DISTINCT c.Country) AS CountryCount
+FROM dbo.Customers c;
 
 -- 2. Show the lowest, highest, and average UnitPrice across all
 --    products (average rounded to 2 decimals).
