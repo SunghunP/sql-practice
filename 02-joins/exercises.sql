@@ -99,7 +99,20 @@ WHERE c.Country = 'Germany';
 -- 11. Show each order line with its category name and a computed
 --     LineTotal (Quantity * UnitPrice), for orders placed in 2021,
 --     highest LineTotal first.
-
+SELECT 
+	od.OrderID,
+	p.ProductName,
+	c.CategoryName,
+	(od.Quantity * od.UnitPrice) AS LineTotal
+FROM dbo.Categories c
+INNER JOIN dbo.Products p
+ON c.CategoryID = p.CategoryID
+INNER JOIN dbo.OrderDetails od
+ON p.ProductID = od.ProductID
+INNER JOIN dbo.Orders o
+ON od.OrderID = o.OrderID
+WHERE o.OrderDate >= '2021-01-01' AND o.OrderDate < '2022-01-01'
+ORDER BY LineTotal DESC;
 
 -- Self-join
 
