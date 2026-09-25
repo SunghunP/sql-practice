@@ -10,6 +10,9 @@
    enough data to be interesting.
    ============================================================ */
 
+USE master;
+GO
+
 IF DB_ID('SqlPractice') IS NOT NULL
 BEGIN
     ALTER DATABASE SqlPractice SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
@@ -191,28 +194,26 @@ CROSS APPLY (SELECT DATEADD(DAY, -1 * (ABS(CHECKSUM(NEWID())) % 730), CAST(GETDA
 GO
 
 -- 1 to 5 line items per order
-;WITH Lines AS (
-    SELECT
-        o.OrderID,
-        n.n AS LineNo
-    FROM Orders o
-    CROSS APPLY (
-        SELECT TOP (1 + ABS(CHECKSUM(NEWID())) % 5) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n
-        FROM sys.all_objects
-    ) n
-)
-INSERT INTO OrderDetails (OrderID, ProductID, Quantity, UnitPrice)
+-- Materialize a random line count per order first so NEWID() is evaluated once per order.
+SELECT OrderID, 1 + ABS(CHECKSUM(NEWID())) % 5 AS LineCount
+INTO #OrderLines
+FROM Orders;
+
+-- Materialize random product/quantity per line for the same reason.
 SELECT
-    l.OrderID,
-    p.ProductID,
-    1 + ABS(CHECKSUM(NEWID())) % 8,
-    p.UnitPrice
-FROM Lines l
-CROSS APPLY (
-    SELECT TOP 1 ProductID, UnitPrice
-    FROM Products
-    ORDER BY NEWID()
-) p;
+    ol.OrderID,
+    1 + ABS(CHECKSUM(NEWID())) % (SELECT COUNT(*) FROM Products) AS ProductID,
+    1 + ABS(CHECKSUM(NEWID())) % 8 AS Quantity
+INTO #Lines
+FROM #OrderLines ol
+JOIN (VALUES (1),(2),(3),(4),(5)) v(n) ON v.n <= ol.LineCount;
+
+INSERT INTO OrderDetails (OrderID, ProductID, Quantity, UnitPrice)
+SELECT l.OrderID, l.ProductID, l.Quantity, p.UnitPrice
+FROM #Lines l
+JOIN Products p ON p.ProductID = l.ProductID;
+
+DROP TABLE #Lines, #OrderLines;
 GO
 
 PRINT 'Done. Row counts:';
