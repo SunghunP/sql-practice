@@ -60,7 +60,15 @@ ORDER BY DATEPART(YEAR, o.OrderDate) ASC;
 
 -- 8. Show total revenue per product (product name + revenue),
 --    highest first.
-
+SELECT
+	p.ProductID,
+	p.ProductName,
+	SUM(od.Quantity * od.UnitPrice) AS Revenue
+FROM dbo.Products p
+INNER JOIN dbo.OrderDetails od
+ON p.ProductID = od.ProductID
+GROUP BY p.ProductID, p.ProductName
+ORDER BY Revenue DESC;
 
 -- 9. Show the number of orders handled per employee (full name + count),
 --    including employees with zero orders.
