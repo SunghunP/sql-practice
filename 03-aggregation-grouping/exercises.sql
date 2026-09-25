@@ -91,7 +91,14 @@ HAVING COUNT(c.CustomerID) > 5;
 
 -- 11. List products that have been ordered in total quantity of more
 --     than 100 units.
-
+SELECT 
+	p.ProductName,
+	SUM(od.Quantity) AS QuantityOrdered
+FROM dbo.Products p
+LEFT JOIN dbo.OrderDetails od
+ON p.ProductID = od.ProductID
+GROUP BY p.ProductID, p.ProductName
+HAVING SUM(od.Quantity) > 100;
 
 -- 12. List categories whose average product UnitPrice is above 30.
 
