@@ -72,7 +72,14 @@ ORDER BY Revenue DESC;
 
 -- 9. Show the number of orders handled per employee (full name + count),
 --    including employees with zero orders.
-
+SELECT 
+	e.EmployeeID,
+	e.FirstName + ' ' + e.LastName as FullName,
+	COUNT(o.OrderID) AS HandledOrders
+FROM dbo.Employees e
+LEFT JOIN dbo.Orders o
+ON e.EmployeeID = o.EmployeeID
+GROUP BY e.EmployeeID, e.FirstName, e.LastName;
 
 -- HAVING
 
