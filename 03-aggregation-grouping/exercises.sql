@@ -42,7 +42,13 @@ GROUP BY c.Country
 ORDER BY NumberOfCustomers DESC;
 
 -- 6. Show the number of products per category (category name + count).
-
+SELECT 
+	c.CategoryName, 
+	COUNT(p.ProductID) AS ProductCount
+FROM dbo.Categories c
+LEFT JOIN dbo.Products p
+ON c.CategoryID = p.CategoryID
+GROUP BY c.CategoryID, c.CategoryName;
 
 -- 7. Show the number of orders per year (by OrderDate), oldest year first.
 
