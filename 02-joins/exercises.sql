@@ -149,7 +149,9 @@ WHERE o.OrderID IS NULL OR c.CustomerID IS NULL;
 
 -- 15. Produce every combination of Category and Employee title
 --     (distinct titles) using a CROSS JOIN.
-
+SELECT DISTINCT c.CategoryName, e.Title
+FROM dbo.Categories c
+CROSS JOIN dbo.Employees e;
 
 -- Challenge
 
