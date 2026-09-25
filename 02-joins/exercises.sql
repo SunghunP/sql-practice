@@ -53,7 +53,11 @@ ON c.CustomerID = o.CustomerID
 WHERE o.OrderID IS NULL;
 
 -- 7. List products that have never been ordered (name only).
-
+SELECT p.ProductName
+FROM dbo.Products p
+LEFT JOIN dbo.OrderDetails o
+ON p.ProductID = o.ProductID
+WHERE o.Quantity IS NULL;
 
 -- 8. List every category and its products, including categories with
 --    no products. Rewrite it using RIGHT JOIN.
