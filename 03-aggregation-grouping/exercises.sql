@@ -165,7 +165,15 @@ ORDER BY [Year], Revenue DESC;
 
 -- 16. Show how many distinct customers ordered in each country per
 --     year. (Hint: COUNT(DISTINCT ...).)
-
+SELECT
+	YEAR(o.OrderDate) as [Year],
+	c.Country,
+	COUNT(DISTINCT c.CustomerID) AS DistinctCustomers
+FROM dbo.Orders o
+INNER JOIN dbo.Customers c
+ON o.CustomerID = c.CustomerID
+GROUP BY c.Country, YEAR(o.OrderDate)
+ORDER BY [Year], c.Country;
 
 -- Challenge
 
