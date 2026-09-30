@@ -149,7 +149,19 @@ HAVING COUNT(p.ProductID) >= 3;
 
 -- 15. Show revenue per year and per category (year, category name,
 --     revenue), ordered by year then revenue descending.
-
+SELECT 
+	YEAR(o.OrderDate) AS [Year],
+	c.CategoryName,
+	SUM(od.UnitPrice * od.Quantity) AS Revenue
+FROM dbo.Orders o
+INNER JOIN dbo.OrderDetails od
+ON o.OrderID = od.OrderID
+INNER JOIN dbo.Products p
+ON od.ProductID = p.ProductID
+INNER JOIN dbo.Categories c
+ON p.CategoryID = c.CategoryID
+GROUP BY YEAR(o.OrderDate), c.CategoryName
+ORDER BY [Year], Revenue DESC;
 
 -- 16. Show how many distinct customers ordered in each country per
 --     year. (Hint: COUNT(DISTINCT ...).)
