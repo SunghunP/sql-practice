@@ -17,7 +17,13 @@ FROM dbo.Products p;
 
 -- 2. Rank products by UnitPrice (highest first) using both RANK and
 --    DENSE_RANK side by side. Where do they differ, and why?
-
+SELECT 
+	p.ProductName,
+	p.UnitPrice,
+	RANK() OVER (ORDER BY p.UnitPrice DESC) AS [Rank],
+	DENSE_RANK() OVER (ORDER BY p.UnitPrice DESC) AS [DenseRank]
+FROM dbo.Products p
+ORDER BY p.UnitPrice DESC;
 
 -- 3. Rank products within each category by UnitPrice, highest first
 --    (category name, product name, price, rank).
