@@ -9,7 +9,11 @@ GO
 
 -- 1. Number every product from most to least expensive using
 --    ROW_NUMBER. Show name, price, and the row number.
-
+SELECT
+	p.ProductName,
+	p.UnitPrice,
+	ROW_NUMBER() OVER (ORDER BY p.UnitPrice DESC)AS RowNumber
+FROM dbo.Products p;
 
 -- 2. Rank products by UnitPrice (highest first) using both RANK and
 --    DENSE_RANK side by side. Where do they differ, and why?
