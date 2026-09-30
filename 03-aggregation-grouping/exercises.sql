@@ -133,7 +133,17 @@ ORDER BY TotalRevenue DESC, c.CustomerID;
 -- 14. For non-discontinued products only, show the number of products
 --     and the average price per category, keeping categories with at
 --     least 3 such products.
-
+SELECT 
+	c.CategoryID,
+	c.CategoryName,
+	COUNT(p.ProductID) AS ProductCount,
+	AVG(p.UnitPrice) AS AverageUnitPrice
+FROM dbo.Categories c
+INNER JOIN dbo.Products p
+ON c.CategoryID = p.CategoryID
+WHERE p.Discontinued = 0
+GROUP BY c.CategoryID, c.CategoryName
+HAVING COUNT(p.ProductID) >= 3;
 
 -- Multi-level grouping
 
