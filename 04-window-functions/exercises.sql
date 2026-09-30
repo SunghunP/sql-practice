@@ -27,7 +27,15 @@ ORDER BY p.UnitPrice DESC;
 
 -- 3. Rank products within each category by UnitPrice, highest first
 --    (category name, product name, price, rank).
-
+SELECT 
+  c.CategoryName,
+  p.ProductName,
+  p.UnitPrice,
+  RANK() OVER (PARTITION BY c.CategoryName ORDER BY p.UnitPrice DESC) AS [RANK]
+FROM dbo.Products p
+INNER JOIN dbo.Categories c 
+ON p.CategoryID = c.CategoryID
+ORDER BY c.CategoryName, [RANK], p.ProductName;
 
 -- 4. Return only the single most expensive product per category.
 --    (Hint: ranking in a CTE or subquery, then filter.)
