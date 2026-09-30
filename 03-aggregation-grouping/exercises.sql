@@ -116,7 +116,19 @@ HAVING AVG(p.UnitPrice) > 30;
 -- 13. Show revenue per customer (company name) counting only orders
 --     placed in 2021, and only customers whose 2021 revenue exceeds
 --     5000. Highest first.
-
+SELECT 
+	c.CustomerID, 
+	c.CompanyName, 
+	SUM(od.UnitPrice * od.Quantity) AS TotalRevenue
+FROM dbo.Customers c
+INNER JOIN dbo.Orders o
+ON c.CustomerID = o.CustomerID
+INNER JOIN dbo.OrderDetails od
+ON o.OrderID = od.OrderID
+WHERE o.OrderDate >= '2021-01-01' AND o.OrderDate < '2022-01-01'
+GROUP BY c.CustomerID, c.CompanyName
+HAVING SUM(od.UnitPrice * od.Quantity) > 5000
+ORDER BY TotalRevenue DESC, c.CustomerID;
 
 -- 14. For non-discontinued products only, show the number of products
 --     and the average price per category, keeping categories with at
