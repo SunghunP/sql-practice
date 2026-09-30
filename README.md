@@ -31,4 +31,5 @@ first before peeking).
 - `05-cte-subqueries` — CTEs, correlated subqueries, recursive CTEs
 - `06-date-time` — date math, DATEDIFF/DATEADD, formatting
 - `07-performance` — execution plans, indexing, query tuning
+- `08-interview-prep` — vague hiring-manager style prompts; practice asking clarifying questions
 - `challenges` — mixed, harder problems that pull from multiple topics
