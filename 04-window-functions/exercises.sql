@@ -56,7 +56,21 @@ WHERE rnk = 1;
 
 -- 5. Return the 3 most recent orders for each customer
 --    (CustomerID, OrderID, OrderDate).
+WITH ranked AS (
+  SELECT 
+  CustomerID, 
+  Order ID, 
+  OrderDate,
+  ROW_NUMBER() OVER (
+    PARTITION BY CustomerID
+    ORDER BY OrderDate DESC, OrderID DESC
+  ) AS rn
+  FROM Orders
+)
 
+SELECT CustomerID, OrderID, OrderDate
+FROM ranked
+WHERE rn <= 3;
 
 -- 6. Split products into 4 price quartiles using NTILE(4).
 --    Show name, price, quartile.
