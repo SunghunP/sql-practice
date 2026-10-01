@@ -106,7 +106,25 @@ FROM o;
 
 -- 8. For each order line, show what percentage of its order's total
 --    it represents (rounded to 2 decimals).
+WITH Line AS (
+	SELECT 
+		OrderID, 
+		(Quantity * UnitPrice) AS LineTotal
+	FROM dbo.OrderDetails
+), WithTotals AS (
+	SELECT
+		OrderID,
+		LineTotal,
+		SUM(LineTotal) OVER (PARTITION BY OrderID) AS OrderTotal
+	FROM Line
+)
 
+SELECT 
+	OrderID,
+	LineTotal,
+	OrderTotal,
+	ROUND((LineTotal/OrderTotal*100),0) AS [Percentage]
+FROM WithTotals;
 
 -- 9. Show each product's price next to the average price of its
 --    category, and the difference between the two.
