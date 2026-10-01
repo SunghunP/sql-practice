@@ -251,7 +251,13 @@ ORDER BY OrderYear, OrderMonth;
 
 -- 15. For each order, show the customer's first-ever OrderDate using
 --     FIRST_VALUE.
-
+SELECT 
+	CustomerID,
+	OrderID,
+	OrderDate,
+	FIRST_VALUE(OrderDate) OVER (PARTITION BY CustomerID ORDER BY OrderDate, OrderID ASC) AS FirstOrderDate
+FROM dbo.Orders
+ORDER BY CustomerID, OrderDate, OrderID
 
 -- Challenge
 
