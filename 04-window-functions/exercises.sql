@@ -198,7 +198,26 @@ ORDER BY OrderYear, OrderMonth;
 
 -- 13. For each customer's orders, show OrderDate and the previous
 --     order's OrderDate, plus the days between them.
+WITH Prev AS (
+	SELECT
+		CustomerID,
+		OrderID,
+		OrderDate,
+		Lag(OrderDate) OVER (
+			PARTITION BY CustomerID
+			ORDER BY OrderDate, OrderID
+		) AS PrevOrderDate
+	FROM dbo.Orders
+)
 
+SELECT
+	CustomerID,
+	OrderID,
+	OrderDate,
+	PrevOrderDate,
+	DATEDIFF(day, PrevOrderDate, OrderDate) AS DaysBetween
+FROM Prev
+ORDER BY CustomerID, OrderDate, OrderID;
 
 -- 14. Show monthly revenue and the change vs. the previous month
 --     (absolute and percent).
