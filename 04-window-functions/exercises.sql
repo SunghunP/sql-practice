@@ -92,7 +92,17 @@ ORDER BY UnitPrice;
 
 -- 7. For each order line, show OrderID, LineTotal, and the total
 --    LineTotal of its entire order on the same row.
-
+WITH o AS (
+  SELECT
+    OrderID,
+    Quantity * UnitPrice AS LineTotal
+  FROM dbo.OrderDetails
+)
+SELECT
+  OrderID,
+  LineTotal,
+  SUM(LineTotal) OVER (PARTITION BY OrderID) AS OrderTotal
+FROM o;
 
 -- 8. For each order line, show what percentage of its order's total
 --    it represents (rounded to 2 decimals).
