@@ -128,7 +128,21 @@ FROM WithTotals;
 
 -- 9. Show each product's price next to the average price of its
 --    category, and the difference between the two.
-
+WITH price AS (
+	SELECT
+		ProductName,
+		CategoryID,
+		UnitPrice,
+		ROUND(AVG(UnitPrice) OVER (PARTITION BY CategoryID), 2) AS AveragePrice
+	FROM dbo.Products
+)
+SELECT
+	ProductName,
+	CategoryID,
+	UnitPrice,
+	AveragePrice,
+	UnitPrice - AveragePrice AS DifferencePrice
+FROM price;
 
 -- Running totals and frames
 
