@@ -39,7 +39,20 @@ ORDER BY c.CategoryName, [RANK], p.ProductName;
 
 -- 4. Return only the single most expensive product per category.
 --    (Hint: ranking in a CTE or subquery, then filter.)
+WITH Ranked AS (
+	SELECT
+		c.CategoryName,
+		p.ProductName,
+		p.UnitPrice,
+		ROW_NUMBER() OVER (PARTITION BY c.CategoryName ORDER BY p.UnitPrice DESC) AS rnk
+	FROM dbo.Products p
+	INNER JOIN dbo.Categories c
+	ON p.CategoryID = c.CategoryID
+)
 
+SELECT CategoryName, ProductName, UnitPrice
+FROM Ranked
+WHERE rnk = 1;
 
 -- 5. Return the 3 most recent orders for each customer
 --    (CustomerID, OrderID, OrderDate).
