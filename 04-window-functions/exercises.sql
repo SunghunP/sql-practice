@@ -50,7 +50,10 @@ WITH Ranked AS (
 	ON p.CategoryID = c.CategoryID
 )
 
-SELECT CategoryName, ProductName, UnitPrice
+SELECT 
+  CategoryName, 
+  ProductName, 
+  UnitPrice
 FROM Ranked
 WHERE rnk = 1;
 
@@ -68,12 +71,21 @@ WITH ranked AS (
   FROM Orders
 )
 
-SELECT CustomerID, OrderID, OrderDate
+SELECT 
+  CustomerID, 
+  OrderID, 
+  OrderDate
 FROM ranked
 WHERE rn <= 3;
 
 -- 6. Split products into 4 price quartiles using NTILE(4).
 --    Show name, price, quartile.
+SELECT
+  ProductName,
+  UnitPrice,
+  NTILE(4) OVER (ORDER BY UnitPrice) AS quartile
+FROM dbo.Products
+ORDER BY UnitPrice;
 
 
 -- Aggregates as window functions
