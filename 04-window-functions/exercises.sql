@@ -34,7 +34,7 @@ SELECT
   RANK() OVER (PARTITION BY c.CategoryName ORDER BY p.UnitPrice DESC) AS [RANK]
 FROM dbo.Products p
 INNER JOIN dbo.Categories c 
-ON p.CategoryID = c.CategoryID
+  ON p.CategoryID = c.CategoryID
 ORDER BY c.CategoryName, [RANK], p.ProductName;
 
 -- 4. Return only the single most expensive product per category.
@@ -47,7 +47,7 @@ WITH Ranked AS (
 		ROW_NUMBER() OVER (PARTITION BY c.CategoryName ORDER BY p.UnitPrice DESC) AS rnk
 	FROM dbo.Products p
 	INNER JOIN dbo.Categories c
-	ON p.CategoryID = c.CategoryID
+	  ON p.CategoryID = c.CategoryID
 )
 
 SELECT 
@@ -175,7 +175,24 @@ ORDER BY OrderDate;
 
 -- 12. Show monthly revenue with a 3-month moving average.
 --     (Hint: ROWS BETWEEN 2 PRECEDING AND CURRENT ROW.)
+WITH Monthly AS(
+	SELECT
+		YEAR(o.OrderDate) AS OrderYear,
+		MONTH(o.OrderDate) AS OrderMonth,
+		SUM(od.Quantity * od.UnitPrice) AS Revenue
+	FROM dbo.Orders o
+	INNER JOIN dbo.OrderDetails od
+		ON o.OrderID = od.OrderID
+	GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate)
+)
 
+SELECT
+	OrderYear,
+	OrderMonth,
+	Revenue,
+	AVG(Revenue) OVER (ORDER BY OrderYear, OrderMonth ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS ThreeMonthTotal
+FROM Monthly
+ORDER BY OrderYear, OrderMonth;
 
 -- LAG / LEAD / FIRST_VALUE
 
