@@ -221,7 +221,33 @@ ORDER BY CustomerID, OrderDate, OrderID;
 
 -- 14. Show monthly revenue and the change vs. the previous month
 --     (absolute and percent).
-
+WITH Monthly AS (
+	SELECT
+		YEAR(o.OrderDate)  AS OrderYear,
+		MONTH(o.OrderDate) AS OrderMonth,
+		SUM(Quantity * UnitPrice) AS Revenue
+	FROM dbo.Orders o
+	INNER JOIN dbo.OrderDetails od
+		ON o.OrderID = od.OrderID
+	GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate)
+),
+WithPrev AS (
+	SELECT
+		OrderYear,
+		OrderMonth,
+		Revenue,
+		LAG(Revenue) OVER (ORDER BY OrderYear, OrderMonth) AS PrevRevenue 
+	FROM Monthly
+)
+SELECT
+	OrderYear,
+	OrderMonth,
+	Revenue,
+	PrevRevenue,
+	Revenue - PrevRevenue AS AbsChange,
+	ROUND((Revenue - PrevRevenue) / NULLIF(PrevRevenue, 0) * 100, 2) AS PctChange
+FROM WithPrev
+ORDER BY OrderYear, OrderMonth;
 
 -- 15. For each order, show the customer's first-ever OrderDate using
 --     FIRST_VALUE.
