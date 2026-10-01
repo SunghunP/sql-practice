@@ -148,7 +148,12 @@ FROM price;
 
 -- 10. Show each order's OrderID, OrderDate, and a running count of
 --     orders over time (ordered by OrderDate, OrderID).
-
+SELECT
+	OrderID,
+	OrderDate,
+	Count(*) OVER (ORDER BY OrderDate, OrderID) AS RunningCount
+FROM dbo.Orders
+ORDER BY OrderDate, OrderID;
 
 -- 11. Show daily revenue (per OrderDate) with a running total of
 --     revenue across days. (Hint: aggregate first, then window.)
