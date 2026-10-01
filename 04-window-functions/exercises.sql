@@ -151,13 +151,27 @@ FROM price;
 SELECT
 	OrderID,
 	OrderDate,
-	Count(*) OVER (ORDER BY OrderDate, OrderID) AS RunningCount
+	COUNT(*) OVER (ORDER BY OrderDate, OrderID) AS RunningCount
 FROM dbo.Orders
 ORDER BY OrderDate, OrderID;
 
 -- 11. Show daily revenue (per OrderDate) with a running total of
 --     revenue across days. (Hint: aggregate first, then window.)
-
+WITH DailyRevenue AS (
+	SELECT
+		o.OrderDate,
+		SUM(od.Quantity * od.UnitPrice) AS Revenue
+	FROM dbo.Orders o
+	INNER JOIN dbo.OrderDetails od
+		ON o.OrderID = od.OrderID
+	GROUP BY o.OrderDate
+)
+SELECT
+	OrderDate,
+	Revenue,
+	SUM(Revenue) OVER (ORDER BY OrderDate) AS RunningTotal
+FROM DailyRevenue
+ORDER BY OrderDate;
 
 -- 12. Show monthly revenue with a 3-month moving average.
 --     (Hint: ROWS BETWEEN 2 PRECEDING AND CURRENT ROW.)
