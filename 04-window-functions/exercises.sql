@@ -287,7 +287,11 @@ FROM dbo.Orders;
 
 
 -- E2. Show CustomerID and the number of orders they have.
-
+SELECT
+  CustomerID,
+  COUNT(OrderID) AS TotalOrders
+FROM dbo.Orders
+GROUP BY CustomerID;
 
 -- E3. Show ProductName, CategoryID, UnitPrice, and the product's price
 --     rank within its category (1 = most expensive).
