@@ -8,7 +8,27 @@ GO
 -- Scalar and IN subqueries
 
 -- 1. List products priced above the average UnitPrice of all products.
+-- Scalar
+SELECT
+	ProductName,
+	UnitPrice
+FROM dbo.Products
+WHERE UnitPrice > (SELECT AVG(UnitPrice) FROM dbo.Products);
 
+-- Window Function and CTE
+WITH HigherProduct AS (
+	SELECT
+		ProductName,
+		UnitPrice,
+		AVG(UnitPrice) OVER () AS AvgPrice
+	FROM dbo.Products
+)
+
+SELECT
+	ProductName,
+	UnitPrice
+FROM HigherProduct
+WHERE(UnitPrice > AvgPrice)
 
 -- 2. List customers who have placed at least one order
 --    (use IN with a subquery, then rewrite with EXISTS).
