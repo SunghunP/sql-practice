@@ -307,7 +307,26 @@ FROM dbo.Products
 ORDER BY CategoryID, CategoryRank;
 
 -- E4. Using E3, return only the most expensive product in each category.
+WITH ranking AS (
+  SELECT
+    ProductName,
+    CategoryID,
+    UnitPrice,
+    RANK() OVER (
+      PARTITION BY CategoryID
+      ORDER BY UnitPrice DESC
+    ) AS CategoryRank
+  FROM dbo.Products
+)
 
+SELECT 
+  ProductName,
+  CategoryID,
+  UnitPrice,
+  CategoryRank
+FROM ranking
+WHERE CategoryRank = 1
+ORDER BY CategoryID;
 
 -- E5. Show each customer's total revenue (Quantity * UnitPrice, summed
 --     over all their orders) and their revenue rank across all customers.
