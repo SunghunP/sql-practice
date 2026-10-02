@@ -295,7 +295,16 @@ GROUP BY CustomerID;
 
 -- E3. Show ProductName, CategoryID, UnitPrice, and the product's price
 --     rank within its category (1 = most expensive).
-
+SELECT
+  ProductName,
+  CategoryID,
+  UnitPrice,
+  RANK() OVER (
+    PARTITION BY CategoryID
+    ORDER BY UnitPrice DESC
+    ) AS CategoryRank
+FROM dbo.Products
+ORDER BY CategoryID, CategoryRank;
 
 -- E4. Using E3, return only the most expensive product in each category.
 
