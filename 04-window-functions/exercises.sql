@@ -273,3 +273,28 @@ ORDER BY CustomerID, OrderDate, OrderID
 -- 18. Identify "gaps and islands": for each customer, group
 --     consecutive-month ordering streaks and return the longest streak
 --     length per customer.
+
+
+-- Extra practice
+
+-- E1. Show OrderID, CustomerID, and the total number of orders that
+--     customer has, on every row.
+SELECT
+  OrderID,
+  CustomerID,
+  COUNT(*) OVER (PARTITION BY CustomerID) AS TotalOrders
+FROM dbo.Orders;
+
+
+-- E2. Show CustomerID and the number of orders they have.
+
+
+-- E3. Show ProductName, CategoryID, UnitPrice, and the product's price
+--     rank within its category (1 = most expensive).
+
+
+-- E4. Using E3, return only the most expensive product in each category.
+
+
+-- E5. Show each customer's total revenue (Quantity * UnitPrice, summed
+--     over all their orders) and their revenue rank across all customers.
