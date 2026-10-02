@@ -330,3 +330,19 @@ ORDER BY CategoryID;
 
 -- E5. Show each customer's total revenue (Quantity * UnitPrice, summed
 --     over all their orders) and their revenue rank across all customers.
+WITH Revenue AS (
+  SELECT 
+    o.CustomerID,
+    SUM(od.Quantity * od.UnitPrice) AS TotalRevenue
+  FROM dbo.Orders o
+  INNER JOIN dbo.OrderDetails od
+    ON o.OrderID = od.OrderID
+  GROUP BY o.CustomerID
+)
+
+SELECT 
+  CustomerID,
+  TotalRevenue,
+  RANK() OVER (ORDER BY TotalRevenue DESC) AS CustomerRank
+FROM Revenue
+ORDER BY CustomerRank;
