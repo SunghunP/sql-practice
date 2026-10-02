@@ -71,6 +71,12 @@ WHERE EXISTS (
 --    (use IN with a subquery, then rewrite with EXISTS).
 SELECT
   EmployeeID,
+  FirstName + ' ' + LastName AS EmployeeName
+FROM dbo.Employees
+WHERE EmployeeID IN (SELECT EmployeeID FROM dbo.Orders);
+
+SELECT
+  EmployeeID,
   (FirstName + ' ' + LastName) AS EmployeeName
 FROM dbo.Employees e
 WHERE EXISTS (
@@ -81,7 +87,23 @@ WHERE EXISTS (
 
 -- 6. List customers who have never placed an order, using NOT EXISTS.
 --    Why is NOT IN risky here if the subquery can return NULLs?
+SELECT 
+  c.CustomerID, 
+  c.CompanyName
+FROM dbo.Customers c
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM dbo.Orders o
+  WHERE o.CustomerID = c.CustomerID
+);
+-- NOT IN is risky: if the subquery returns any NULL, every comparison
+-- becomes UNKNOWN and the query returns zero rows. NOT EXISTS is safe
+-- because NULLs never satisfy the = correlation.
 
+-- Returns no rows if any Orders.CustomerID is NULL
+SELECT CustomerID, CompanyName
+FROM dbo.Customers
+WHERE CustomerID NOT IN (SELECT CustomerID FROM dbo.Orders);
 
 -- 7. List products that appear in at least one order placed in 2021.
 
