@@ -69,7 +69,15 @@ WHERE EXISTS (
 
 -- 5. List employees who have handled at least one order
 --    (use IN with a subquery, then rewrite with EXISTS).
-
+SELECT
+  EmployeeID,
+  (FirstName + ' ' + LastName) AS EmployeeName
+FROM dbo.Employees e
+WHERE EXISTS (
+  SELECT 1
+  FROM dbo.Orders o
+  WHERE o.EmployeeID = e.EmployeeID
+);
 
 -- 6. List customers who have never placed an order, using NOT EXISTS.
 --    Why is NOT IN risky here if the subquery can return NULLs?
