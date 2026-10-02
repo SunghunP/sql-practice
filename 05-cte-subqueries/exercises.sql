@@ -39,7 +39,15 @@ WHERE OrderDate = (SELECT MAX(OrderDate) FROM dbo.Orders);
 
 -- 3. List products that have been ordered with a Quantity of 50 or more
 --    on any order line (use IN with a subquery on OrderDetails).
-
+SELECT
+  p.ProductName,
+  p.ProductID
+FROM dbo.Products p
+WHERE p.ProductID IN (
+  SELECT od.ProductID
+  FROM dbo.OrderDetails od
+  WHERE od.Quantity >= 50
+);
 
 -- 4. List customers who have placed at least one order
 --    (use IN with a subquery, then rewrite with EXISTS).
