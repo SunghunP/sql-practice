@@ -106,7 +106,17 @@ FROM dbo.Customers
 WHERE CustomerID NOT IN (SELECT CustomerID FROM dbo.Orders);
 
 -- 7. List products that appear in at least one order placed in 2021.
-
+SELECT
+  p.ProductName,
+  p.ProductID
+FROM dbo.Products p
+WHERE p.ProductID IN (
+  SELECT od.ProductID
+  FROM dbo.OrderDetails od
+  JOIN dbo.Orders o
+  ON od.OrderID = o.OrderID
+  WHERE o.OrderDate >= '2021-01-01' AND o.OrderDate < '2022-01-01'
+);
 
 -- Subqueries in FROM / SELECT
 
