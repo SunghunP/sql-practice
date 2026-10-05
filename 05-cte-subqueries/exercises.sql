@@ -122,7 +122,13 @@ WHERE p.ProductID IN (
 
 -- 8. Show each product's name, price, and the average price of its
 --    category via a scalar subquery in the SELECT list.
-
+SELECT
+  p.ProductName,
+  p.UnitPrice,
+  (SELECT AVG(p2.UnitPrice)
+   FROM dbo.Products p2
+   WHERE p2.CategoryID = p.CategoryID) AS CategoryAvgPrice
+FROM dbo.Products p;
 
 -- 9. Using a subquery in FROM, show the average number of order lines
 --    per order.
