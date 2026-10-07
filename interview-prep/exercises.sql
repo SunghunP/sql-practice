@@ -12,6 +12,17 @@ GO
 --     (Hint: you need two levels of aggregation. A subquery in FROM is
 --     allowed, or peek ahead at 05.)
 
+WITH OrderCount AS (
+  SELECT
+    OrderID
+    COUNT(*) AS LineCount
+  FROM dbo.OrderDetails
+  GROUP BY OrderID
+)
+
+SELECT
+  AVG(LineCount * 1.0) AS AvgLinesPerOrder
+FROM OrderCount
 
 -- 18. List employees whose total revenue handled is above the average
 --     revenue per employee. (Hint: needs a subquery or CTE.)
