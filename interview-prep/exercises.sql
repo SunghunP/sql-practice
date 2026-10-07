@@ -14,7 +14,7 @@ GO
 
 WITH OrderCount AS (
   SELECT
-    OrderID
+    OrderID,
     COUNT(*) AS LineCount
   FROM dbo.OrderDetails
   GROUP BY OrderID
@@ -26,6 +26,31 @@ FROM OrderCount
 
 -- 18. List employees whose total revenue handled is above the average
 --     revenue per employee. (Hint: needs a subquery or CTE.)
+
+WITH EmployeeTotals AS (
+  SELECT
+    e.EmployeeID,
+    e.FirstName,
+    e.LastName,
+    SUM(od.Quantity * od.UnitPrice) AS TotalRevenue
+  FROM dbo.Employees e
+  INNER JOIN dbo.Orders o
+    ON e.EmployeeID = o.EmployeeID
+  INNER JOIN dbo.OrderDetails od
+    ON o.OrderID = od.OrderID
+  GROUP BY
+    e.EmployeeID,
+    e.FirstName,
+    e.LastName
+)
+
+SELECT
+  EmployeeID,
+  FirstName,
+  LastName,
+  TotalRevenue
+FROM EmployeeTotals
+WHERE TotalRevenue > (SELECT AVG(TotalRevenue) FROM EmployeeTotals);
 
 
 -- ============================================================
