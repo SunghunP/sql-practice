@@ -202,9 +202,17 @@ SELECT
    WHERE p2.CategoryID = p.CategoryID) AS CategoryAvgPrice
 FROM dbo.Products p;
 
--- 9. Using a subquery in FROM, show the average number of order lines
---    per order.
-
+-- 9. Using a subquery in FROM, show the average number of orders per
+--    customer.
+SELECT
+  AVG(CustomerOrderCount) AS AvgOrdersPerCustomer
+FROM (
+  SELECT
+    CustomerID,
+    COUNT(OrderID) AS CustomerOrderCount
+  FROM dbo.Orders
+  GROUP BY CustomerID
+) AS CustomerOrderCounts
 
 -- Correlated subqueries
 
