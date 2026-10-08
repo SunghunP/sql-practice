@@ -227,7 +227,15 @@ FROM dbo.Customers c;
 
 -- 11. List products that cost more than the average price of their
 --    own category.
-
+SELECT
+  p.ProductName,
+  p.UnitPrice
+FROM dbo.Products p
+WHERE p.UnitPrice > (
+  SELECT AVG(p2.UnitPrice)
+  FROM dbo.Products p2
+  WHERE p2.CategoryID = p.CategoryID
+);
 
 -- 12. List orders whose total value is higher than the average total
 --    value of all orders placed by the same customer.
