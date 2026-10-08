@@ -218,7 +218,12 @@ FROM (
 
 -- 10. For each customer, show the date of their most recent order
 --    using a correlated subquery.
-
+SELECT
+  c.CustomerID,
+  (SELECT MAX(o.OrderDate)
+   FROM dbo.Orders o
+   WHERE o.CustomerID = c.CustomerID) AS MostRecentOrder
+FROM dbo.Customers c;
 
 -- 11. List products that cost more than the average price of their
 --    own category.
