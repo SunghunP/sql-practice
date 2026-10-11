@@ -303,7 +303,34 @@ ORDER BY Revenue;
 -- 15. Using two chained CTEs: first compute revenue per order, then
 --     per customer average order revenue. Show customers whose average
 --     is above the overall average.
-
+WITH RevenuePerOrder AS (
+  SELECT
+    c.CompanyName,
+    o.CustomerID,
+    od.OrderID,
+    SUM(od.Quantity * od.UnitPrice) AS Revenue
+  FROM dbo.OrderDetails od
+  INNER JOIN dbo.Orders o
+    ON od.OrderID = o.OrderID
+  INNER JOIN dbo.Customers c
+    ON o.CustomerID = c.CustomerID
+  GROUP BY c.CompanyName, o.CustomerID, od.OrderID
+), CustomerRevenueAvg AS (
+  SELECT
+    CompanyName,
+    CustomerID,
+    AVG(Revenue) AS AvgRevenue
+  FROM RevenuePerOrder
+  GROUP BY CompanyName, CustomerID
+)
+SELECT
+  CompanyName,
+  CustomerID,
+  AvgRevenue,
+  (SELECT AVG(Revenue) FROM RevenuePerOrder) AS AverageOrderRevenue
+FROM CustomerRevenueAvg
+WHERE AvgRevenue > (SELECT AVG(Revenue) FROM RevenuePerOrder)
+ORDER BY AvgRevenue DESC;
 
 -- 16. Using a CTE, find employees who handled more orders than the
 --     average employee.
