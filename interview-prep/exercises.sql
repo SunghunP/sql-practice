@@ -281,7 +281,24 @@ FROM CustomerOrderCounts;
 
 -- 14. Using a CTE, list the top 5 customers by total revenue
 --     (company name + revenue).
-
+WITH CustomerSpending AS (
+  SELECT
+    c.CompanyName,
+    c.CustomerID,
+    SUM(od.Quantity * od.UnitPrice) AS Revenue
+  FROM dbo.Customers c
+  INNER JOIN dbo.Orders o
+    ON c.CustomerID = o.CustomerID
+  INNER JOIN dbo.OrderDetails od
+    ON o.OrderID = od.OrderID
+  GROUP BY c.CompanyName, c.CustomerID
+)
+SELECT TOP 5
+  CompanyName,
+  Revenue,
+  RANK() OVER (ORDER BY Revenue DESC) AS RevenueRank 
+FROM CustomerSpending
+ORDER BY Revenue;
 
 -- 15. Using two chained CTEs: first compute revenue per order, then
 --     per customer average order revenue. Show customers whose average
