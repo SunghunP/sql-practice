@@ -45,6 +45,17 @@ FROM dbo.Orders o
 WHERE o.ShippedDate IS NOT NULL;
 
 -- 5. List orders that took more than 7 days to ship.
+WITH OrderDaysToShip AS (
+  SELECT
+    o.OrderID,
+    DATEDIFF(DAY, o.OrderDate, o.ShippedDate) AS DaysToShip
+  FROM dbo.Orders o
+)
+SELECT 
+  OrderID,
+  DaysToShip
+FROM OrderDaysToShip
+WHERE DaysToShip > 7;
 
 
 -- 6. Show each employee's full name and tenure in whole years as of
