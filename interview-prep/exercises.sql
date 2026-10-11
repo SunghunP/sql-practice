@@ -1,7 +1,6 @@
 USE SqlPractice;
 GO
 
-
 -- ============================================================
 -- 06-date-time: date math, DATEDIFF/DATEADD, formatting
 -- ============================================================
@@ -10,15 +9,30 @@ GO
 
 -- 1. Show each order's OrderID, year, month, and day of week name
 --    (use YEAR, MONTH, DATENAME).
-
+SELECT
+  OrderID,
+  DATEPART(YEAR, o.OrderDate) AS [Year],
+  DATEPART(MONTH, o.OrderDate) AS [Month],
+  DATENAME(WEEKDAY, o.OrderDate) AS [Weekday]
+FROM dbo.Orders o;
 
 -- 2. List orders placed on a weekend. (Careful: DATEPART(WEEKDAY, ...)
 --    depends on DATEFIRST. Use DATENAME or check @@DATEFIRST.)
-
+SELECT
+  OrderID,
+  DATENAME(WEEKDAY, o.OrderDate) AS [Weekday]
+FROM dbo.Orders o
+WHERE DATENAME(WEEKDAY, o.OrderDate) IN ('Saturday', 'Sunday');
 
 -- 3. Show the quarter each order was placed in and the number of
 --    orders per quarter.
-
+SELECT
+  YEAR(o.OrderDate) AS OrderYear,
+  DATEPART(QUARTER, o.OrderDate) AS OrderQuarter,
+  COUNT(*) AS OrderCount
+FROM dbo.Orders o
+GROUP BY YEAR(o.OrderDate), DATEPART(QUARTER, o.OrderDate)
+ORDER BY OrderYear, OrderQuarter;
 
 -- DATEDIFF / DATEADD
 
