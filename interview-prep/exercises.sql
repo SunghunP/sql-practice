@@ -351,7 +351,15 @@ WHERE OrderIDCount > (SELECT AVG(OrderIDCount) FROM Emp);
 -- Recursive CTEs
 
 -- 17. Generate the numbers 1 through 20 with a recursive CTE.
-
+WITH Numbers AS (
+  SELECT 1 AS n        -- anchor
+  UNION ALL
+  SELECT n + 1         -- recursive part
+  FROM Numbers
+  WHERE n < 20         -- stop condition
+)
+SELECT n 
+FROM Numbers;
 
 -- 18. Show the full employee hierarchy: each employee with their
 --     level (top manager = 0) and the chain of manager names as a
