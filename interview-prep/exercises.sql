@@ -38,7 +38,11 @@ ORDER BY OrderYear, OrderQuarter;
 
 -- 4. For shipped orders, show OrderID and the number of days between
 --    OrderDate and ShippedDate.
-
+SELECT
+  o.OrderID,
+  DATEDIFF(DAY, o.OrderDate, o.ShippedDate) AS DaysToShip
+FROM dbo.Orders o
+WHERE o.ShippedDate IS NOT NULL;
 
 -- 5. List orders that took more than 7 days to ship.
 
