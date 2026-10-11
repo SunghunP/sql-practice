@@ -239,9 +239,33 @@ WHERE p.UnitPrice > (
 
 -- 12. List orders whose total value is higher than the average total
 --    value of all orders placed by the same customer.
+WITH OrderTotals AS (
+  SELECT
+    o.CustomerID,
+    od.OrderID,
+    SUM(Quantity * UnitPrice) AS OrderTotal
+  FROM dbo.OrderDetails od
+  INNER JOIN dbo.Orders o
+    ON od.OrderID = o.OrderID
+  GROUP BY CustomerID, od.OrderID
+), CustomerAvg AS (
+  SELECT
+    CustomerID,
+    AVG(OrderTotal) AS AverageOrderTotal
+  FROM OrderTotals
+  GROUP BY CustomerID
+)
+SELECT
+  ot.CustomerID,
+  ot.OrderID,
+  OrderTotal,
+  AverageOrderTotal
+FROM OrderTotals ot
+INNER JOIN CustomerAvg cv
+  ON ot.CustomerID = cv.CustomerID
+WHERE OrderTotal > AverageOrderTotal
+ORDER BY ot.CustomerID, OrderTotal, ot.OrderID;
 
-
--- CTEs
 
 -- 13. Rewrite #9 with a CTE.
 
