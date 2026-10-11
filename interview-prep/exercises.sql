@@ -268,7 +268,16 @@ ORDER BY ot.CustomerID, OrderTotal, ot.OrderID;
 
 
 -- 13. Rewrite #9 with a CTE.
-
+WITH CustomerOrderCounts AS (
+  SELECT
+    CustomerID,
+    COUNT(OrderID) AS CustomerOrderCount
+  FROM dbo.Orders
+  GROUP BY CustomerID
+)
+SELECT
+  AVG(CustomerOrderCount) AS AvgOrdersPerCustomer
+FROM CustomerOrderCounts;
 
 -- 14. Using a CTE, list the top 5 customers by total revenue
 --     (company name + revenue).
