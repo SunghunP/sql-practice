@@ -97,3 +97,45 @@ SELECT
 	UnitPrice
 FROM Ranked
 WHERE rn = 1;
+
+-- 8. List customers who have never placed an order, using NOT EXISTS. Why is NOT IN risky here?
+SELECT
+	c.CustomerID,
+	c.CompanyName
+FROM dbo.Customers c
+WHERE NOT EXISTS (
+	SELECT 1
+	FROM dbo.Orders o
+	WHERE o.CustomerID = c.CustomerID
+);
+-- NOT IN is risky: if the subquery returns any NULL, every comparison
+-- becomes UNKNOWN and the query returns zero rows. NOT EXISTS is safe
+-- because NULLs never satisfy the = correlation.
+
+-- 9. List orders whose total value is higher than the average total value of all orders placed by the same customer.
+WITH OrderTotals AS (
+	SELECT
+		o.CustomerID,
+		od.OrderID,
+		SUM(od.Quantity * od.UnitPrice) AS OrderTotal
+	FROM dbo.OrderDetails od
+	INNER JOIN dbo.Orders o
+		ON od.OrderID = o.OrderID
+	GROUP BY o.CustomerID, od.OrderID
+), CustomerAvg AS (
+	SELECT
+		CustomerID,
+		AVG(OrderTotal) AS AverageOrderTotal
+	FROM OrderTotals
+	GROUP BY CustomerID
+)
+SELECT
+	ot.CustomerID,
+	ot.OrderID,
+	ot.OrderTotal,
+	cv.AverageOrderTotal
+FROM OrderTotals ot
+INNER JOIN CustomerAvg cv
+	ON ot.CustomerID = cv.CustomerID
+WHERE ot.OrderTotal > cv.AverageOrderTotal
+ORDER BY ot.CustomerID, ot.OrderTotal, ot.OrderID;
