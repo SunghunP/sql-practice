@@ -334,7 +334,19 @@ ORDER BY AvgRevenue DESC;
 
 -- 16. Using a CTE, find employees who handled more orders than the
 --     average employee.
+WITH Emp AS (
+  SELECT
+    EmployeeID,
+    COUNT(OrderID) AS OrderIDCount
+  FROM dbo.Orders
+  GROUP BY EmployeeID
+)
 
+SELECT
+  EmployeeID,
+  OrderIDCount
+FROM Emp
+WHERE OrderIDCount > (SELECT AVG(OrderIDCount) FROM Emp);
 
 -- Recursive CTEs
 
