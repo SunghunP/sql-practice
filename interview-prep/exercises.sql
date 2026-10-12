@@ -61,7 +61,16 @@ WHERE DaysToShip > 7;
 -- 6. Show each employee's full name and tenure in whole years as of
 --    today. Note: DATEDIFF(YEAR, ...) counts calendar boundaries, so
 --    it can be off by one. Write an accurate version.
-
+SELECT
+  e.EmployeeID,
+  e.FirstName + ' ' + e.LastName AS FullName,
+  DATEDIFF(YEAR, e.HireDate, GETDATE())
+    - CASE
+        WHEN DATEADD(YEAR, DATEDIFF(YEAR, e.HireDate, GETDATE()), e.HireDate) > GETDATE()
+        THEN 1
+        ELSE 0
+      END AS Tenure
+FROM dbo.Employees e;
 
 -- 7. For each order, show a "due date" 14 days after OrderDate.
 
