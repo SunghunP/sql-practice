@@ -73,7 +73,11 @@ SELECT
 FROM dbo.Employees e;
 
 -- 7. For each order, show a "due date" 14 days after OrderDate.
-
+SELECT
+  o.OrderID,
+  o.OrderDate,
+  DATEADD(DAY, 14, o.OrderDate) AS DueDate
+FROM dbo.Orders o;
 
 -- 8. List orders that are unshipped and were placed more than 30 days
 --    before the latest OrderDate in the table.
