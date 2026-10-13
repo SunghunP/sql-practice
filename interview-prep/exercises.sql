@@ -81,8 +81,12 @@ FROM dbo.Orders o;
 
 -- 8. List orders that are unshipped and were placed more than 30 days
 --    before the latest OrderDate in the table.
-
-
+SELECT
+  o.OrderID,
+  o.OrderDate
+FROM dbo.Orders o
+WHERE o.ShippedDate IS NULL
+  AND o.OrderDate < DATEADD(DAY, -30, (SELECT MAX(OrderDate) FROM dbo.Orders));
 -- Truncating and boundaries
 
 -- 9. Show the first day of the month for each OrderDate, and the number
