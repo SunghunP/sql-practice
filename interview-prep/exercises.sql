@@ -176,7 +176,21 @@ ORDER BY OrderMonth;
 
 -- 16. For each customer, show the average number of days between
 --     consecutive orders. (Hint: LAG from 04.)
-
+WITH gaps AS (
+  SELECT
+    o.CustomerID,
+    DATEDIFF(DAY,
+      LAG(o.OrderDate) OVER (PARTITION BY o.CustomerID ORDER BY o.OrderDate, o.OrderID),
+      o.OrderDate) AS DaysSincePrev
+  FROM dbo.Orders o
+)
+SELECT
+  CustomerID,
+  CAST(AVG(DaysSincePrev * 1.0) AS DECIMAL(10,1)) AS AvgDaysBetweenOrders
+FROM gaps
+GROUP BY CustomerID
+HAVING COUNT(DaysSincePrev) > 0      -- drop customers with only one order
+ORDER BY AvgDaysBetweenOrders;
 
 -- Challenge
 
