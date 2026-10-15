@@ -100,7 +100,18 @@ GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate);
 
 -- 10. List orders placed in the last full calendar month of the data
 --     (relative to MAX(OrderDate)), without hard-coding dates.
-
+WITH bounds AS (
+  SELECT
+    DATEADD(DAY, 1, EOMONTH(MAX(OrderDate), -2)) AS StartDate,  -- 1st of previous month
+    DATEADD(DAY, 1, EOMONTH(MAX(OrderDate), -1)) AS EndDate     -- 1st of max's month (exclusive)
+  FROM dbo.Orders
+)
+SELECT o.*
+FROM dbo.Orders o
+CROSS JOIN bounds b
+WHERE o.OrderDate >= b.StartDate
+  AND o.OrderDate <  b.EndDate
+ORDER BY o.OrderDate;
 
 -- 11. Show the last day of the month for each employee's HireDate
 --     using EOMONTH.
