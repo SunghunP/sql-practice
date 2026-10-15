@@ -92,11 +92,11 @@ WHERE o.ShippedDate IS NULL
 -- 9. Show the first day of the month for each OrderDate, and the number
 --    of orders per month. (Hint: DATEFROMPARTS or EOMONTH tricks.)
 SELECT
-  o.OrderID,
   DATEFROMPARTS(YEAR(o.OrderDate), MONTH(o.OrderDate), 1) AS FirstDayOfMonth,
   COUNT(*) AS OrdersPerMonth
 FROM dbo.Orders o
-GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate);
+GROUP BY DATEFROMPARTS(YEAR(o.OrderDate), MONTH(o.OrderDate), 1)
+ORDER BY FirstDayOfMonth;
 
 -- 10. List orders placed in the last full calendar month of the data
 --     (relative to MAX(OrderDate)), without hard-coding dates.
@@ -115,7 +115,13 @@ ORDER BY o.OrderDate;
 
 -- 11. Show the last day of the month for each employee's HireDate
 --     using EOMONTH.
-
+SELECT
+  e.EmployeeID,
+  e.FirstName,
+  e.LastName,
+  e.HireDate,
+  EOMONTH(e.HireDate) AS HireMonthEnd
+FROM dbo.Employees e;
 
 -- Formatting
 
