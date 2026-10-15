@@ -139,3 +139,15 @@ INNER JOIN CustomerAvg cv
 	ON ot.CustomerID = cv.CustomerID
 WHERE ot.OrderTotal > cv.AverageOrderTotal
 ORDER BY ot.CustomerID, ot.OrderTotal, ot.OrderID;
+
+-- 10. Show each employee's full name and tenure in whole years as of today. DATEDIFF(YEAR, ...) counts calendar boundaries, so it can be off by one. Write an accurate version.
+SELECT
+	e.EmployeeID,
+	e.FirstName + ' ' + e.LastName AS FullName,
+	DATEDIFF(YEAR, e.HireDate, GETDATE())
+		- CASE
+			WHEN DATEADD(YEAR, DATEDIFF(YEAR, e.HireDate, GETDATE()), e.HireDate) > GETDATE()
+			THEN 1
+			ELSE 0
+		  END AS Tenure
+FROM dbo.Employees e;
