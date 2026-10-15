@@ -166,7 +166,13 @@ ORDER BY OrderYear;
 
 -- 15. Show the average days-to-ship per month, for shipped orders only,
 --     rounded to 1 decimal.
-
+SELECT
+  DATEFROMPARTS(YEAR(o.OrderDate), MONTH(o.OrderDate), 1) AS OrderMonth,
+  ROUND(AVG(DATEDIFF(DAY, o.OrderDate, o.ShippedDate) * 1.0), 1) AS AvgDaysToShip
+FROM dbo.Orders o
+WHERE o.ShippedDate IS NOT NULL
+GROUP BY DATEFROMPARTS(YEAR(o.OrderDate), MONTH(o.OrderDate), 1)
+ORDER BY OrderMonth;
 
 -- 16. For each customer, show the average number of days between
 --     consecutive orders. (Hint: LAG from 04.)
