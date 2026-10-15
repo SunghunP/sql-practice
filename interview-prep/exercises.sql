@@ -146,7 +146,23 @@ ORDER BY YearMonth;
 -- Analysis
 
 -- 14. Find the month with the most orders in each year.
-
+WITH monthly AS (
+  SELECT
+    YEAR(o.OrderDate)  AS OrderYear,
+    MONTH(o.OrderDate) AS OrderMonth,
+    COUNT(*)           AS OrderCount
+  FROM dbo.Orders o
+  GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate)
+),
+ranked AS (
+  SELECT *,
+    RANK() OVER (PARTITION BY OrderYear ORDER BY OrderCount DESC) AS rnk
+  FROM monthly
+)
+SELECT OrderYear, OrderMonth, OrderCount
+FROM ranked
+WHERE rnk = 1
+ORDER BY OrderYear;
 
 -- 15. Show the average days-to-ship per month, for shipped orders only,
 --     rounded to 1 decimal.
