@@ -20,3 +20,19 @@ SELECT
     year_month 
 FROM shipments
 GROUP BY year_month;
+
+Write a query that returns the number of unique users per client for each month. Assume all events occur within the same year, so only month needs to be be in the output as a number from 1 to 12.
+WITH client_counts AS (
+    SELECT
+        client_id,
+        user_id,
+        MONTH(time_id) AS month_num
+    FROM fact_events
+)
+
+SELECT
+    client_id,
+    COUNT(DISTINCT user_id) AS user_count,
+    month_num
+FROM client_counts
+GROUP BY client_id, month_num;
