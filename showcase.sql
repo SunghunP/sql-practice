@@ -113,7 +113,7 @@ WHERE NOT EXISTS (
 -- because NULLs never satisfy the = correlation.
 
 -- 9. List orders whose total value is higher than the average total value of all orders placed by the same customer.
-WITH OrderTotals AS (
+WITH OrderTotals AS (  -- total value of each order, tagged with its customer
 	SELECT
 		o.CustomerID,
 		od.OrderID,
@@ -122,23 +122,30 @@ WITH OrderTotals AS (
 	INNER JOIN dbo.Orders o
 		ON od.OrderID = o.OrderID
 	GROUP BY o.CustomerID, od.OrderID
-), CustomerAvg AS (
+), CustomerAvg AS (  -- average order total per customer
 	SELECT
 		CustomerID,
 		AVG(OrderTotal) AS AverageOrderTotal
 	FROM OrderTotals
 	GROUP BY CustomerID
+), OrdersVsAvg AS (  -- each order alongside its customer's average
+	SELECT
+		ot.CustomerID,
+		ot.OrderID,
+		ot.OrderTotal,
+		cv.AverageOrderTotal
+	FROM OrderTotals ot
+	INNER JOIN CustomerAvg cv
+		ON ot.CustomerID = cv.CustomerID
 )
 SELECT
-	ot.CustomerID,
-	ot.OrderID,
-	ot.OrderTotal,
-	cv.AverageOrderTotal
-FROM OrderTotals ot
-INNER JOIN CustomerAvg cv
-	ON ot.CustomerID = cv.CustomerID
-WHERE ot.OrderTotal > cv.AverageOrderTotal
-ORDER BY ot.CustomerID, ot.OrderTotal, ot.OrderID;
+	CustomerID,
+	OrderID,
+	OrderTotal,
+	AverageOrderTotal
+FROM OrdersVsAvg
+WHERE OrderTotal > AverageOrderTotal
+ORDER BY CustomerID, OrderTotal, OrderID;
 
 -- 10. Show each employee's full name and tenure in whole years as of today. DATEDIFF(YEAR, ...) counts calendar boundaries, so it can be off by one. Write an accurate version.
 SELECT
