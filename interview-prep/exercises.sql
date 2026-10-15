@@ -87,11 +87,16 @@ SELECT
 FROM dbo.Orders o
 WHERE o.ShippedDate IS NULL
   AND o.OrderDate < DATEADD(DAY, -30, (SELECT MAX(OrderDate) FROM dbo.Orders));
--- Truncating and boundaries
 
+-- Truncating and boundaries
 -- 9. Show the first day of the month for each OrderDate, and the number
 --    of orders per month. (Hint: DATEFROMPARTS or EOMONTH tricks.)
-
+SELECT
+  o.OrderID,
+  DATEFROMPARTS(YEAR(o.OrderDate), MONTH(o.OrderDate), 1) AS FirstDayOfMonth,
+  COUNT(*) AS OrdersPerMonth
+FROM dbo.Orders o
+GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate);
 
 -- 10. List orders placed in the last full calendar month of the data
 --     (relative to MAX(OrderDate)), without hard-coding dates.
