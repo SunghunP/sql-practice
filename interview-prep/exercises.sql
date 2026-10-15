@@ -128,7 +128,12 @@ FROM dbo.Employees e;
 -- 12. Show each OrderDate formatted as 'Mon DD, YYYY' (e.g. 'Mar 05,
 --     2021') using FORMAT, and again using CONVERT with a style.
 --     Which is faster on large tables and why?
-
+SELECT
+  o.OrderID,
+  o.OrderDate,
+  FORMAT(o.OrderDate, 'MMM dd, yyyy')     AS Formatted_FORMAT,   -- Mar 05, 2021
+  CONVERT(VARCHAR(12), o.OrderDate, 107)  AS Formatted_CONVERT   -- Mar 05, 2021
+FROM dbo.Orders o;
 
 -- 13. Show monthly order counts labelled as 'YYYY-MM'.
 
