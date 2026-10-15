@@ -136,7 +136,12 @@ SELECT
 FROM dbo.Orders o;
 
 -- 13. Show monthly order counts labelled as 'YYYY-MM'.
-
+SELECT
+  CONVERT(CHAR(7), o.OrderDate, 120) AS YearMonth,   -- '2021-03'
+  COUNT(*) AS OrderCount
+FROM dbo.Orders o
+GROUP BY CONVERT(CHAR(7), o.OrderDate, 120)
+ORDER BY YearMonth;
 
 -- Analysis
 
