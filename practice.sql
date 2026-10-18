@@ -159,6 +159,58 @@ SELECT
 		  END AS Tenure
 FROM dbo.Employees e;
 
+-- 11. For each category, show the number of products, the number of discontinued products, and the average unit price (2 decimals). Include categories with zero products.
+WITH ProductCounts AS (
+-- get Count of products per category
+  SELECT
+    CategoryID,
+    COUNT(ProductID) AS ProductCount
+  FROM dbo.products 
+  GROUP BY CategoryID
+), DiscontinuedCounts AS (
+-- get Count of discontinued products per category
+  SELECT
+    CategoryID,
+    COUNT(ProductID) AS DiscontinuedCount
+  FROM dbo.products
+  WHERE Discontinued = 1
+  GROUP BY CategoryID
+), AvgUnitPrices AS (
+-- get Average Unit Price per category
+  SELECT
+    CategoryID,
+    AVG(UnitPrice) AS AvgUnitPrice
+  FROM dbo.products
+  GROUP BY CategoryID
+), final AS (
+-- combine product counts, discontinued counts, and average unit prices per category
+  SELECT
+    pc.CategoryID,
+    pc.ProductCount,
+    dc.DiscontinuedCount,
+    aup.AvgUnitPrice
+  FROM ProductCounts pc
+  LEFT JOIN DiscontinuedCounts dc
+    ON pc.CategoryID = dc.CategoryID
+  LEFT JOIN AvgUnitPrices aup
+    ON pc.CategoryID = aup.CategoryID
+)
+
+SELECT
+  CategoryID,
+  ProductCount,
+  COALESCE(DiscontinuedCount, 0) AS DiscontinuedCount,
+  ROUND(AvgUnitPrice, 2) AS AvgUnitPrice
+FROM final
+
+-- alternative approach without CTEs
+SELECT
+  CategoryID,
+  COUNT(ProductID) AS ProductCount,
+  SUM(CASE WHEN Discontinued = 1 THEN 1 ELSE 0 END) AS DiscontinuedCount,
+  ROUND(AVG(UnitPrice), 2) AS AvgUnitPrice
+FROM dbo.products
+GROUP BY CategoryID
 
 -- ============================================================
 -- StrataScratch challenges (different schema, won't run against SqlPractice)
@@ -198,3 +250,4 @@ SELECT
 	month_num
 FROM client_counts
 GROUP BY client_id, month_num;
+
