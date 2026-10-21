@@ -271,3 +271,44 @@ SELECT
   SUM(Total) OVER (PARTITION BY OrderYear ORDER BY OrderMonth) AS YTDRevenue 
 FROM monthly_sum
 ORDER BY OrderYear, OrderMonth;
+
+-- 16. For each category, show the top 3 products by total revenue. If products tie on revenue, 
+-- include all of them (a category may return more than 3 rows). 
+-- Show category name, product name, total revenue, and rank.
+
+-- one row has one category, then one of the top three products (rank by total revenue)
+-- we create the revenue for each item, GROUP BY category and item
+
+-- We have to join on both Categories (to get the name) and OrderDetails (to get the revenue)
+WITH category_revenue AS (
+  SELECT
+    p.CategoryID,
+    c.CategoryName,
+    p.ProductID,
+    p.ProductName,
+    SUM(od.Quantity * od.UnitPrice) AS Revenue
+  FROM dbo.Products p
+  INNER JOIN dbo.Categories c
+    ON p.CategoryID = c.CategoryID
+  INNER JOIN dbo.OrderDetails od
+    ON p.ProductID = od.ProductID
+  GROUP BY p.CategoryID, c.CategoryName, p.ProductID, p.ProductName
+), category_revenue_ranked AS (
+  -- We also need to create a window function in a second cte due to the logical processing order (cant use revenue in the first cte.)
+  SELECT
+    CategoryID,
+    CategoryName,
+    ProductName,
+    Revenue,
+    DENSE_RANK() OVER (PARTITION BY CategoryID ORDER BY Revenue DESC) AS RevenueRank 
+  FROM category_revenue
+)
+
+SELECT
+  CategoryName,
+  ProductName,
+  Revenue,
+  RevenueRank 
+FROM category_revenue_ranked
+WHERE RevenueRank  <= 3
+ORDER BY CategoryName, RevenueRank ;
