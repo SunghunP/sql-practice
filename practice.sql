@@ -160,70 +160,69 @@ SELECT
 FROM dbo.Employees e;
 
 -- 11. For each category, show the number of products, the number of discontinued products, and the average unit price (2 decimals). Include categories with zero products.
-WITH ProductCounts AS (
--- get Count of products per category
-  SELECT
-    CategoryID,
-    COUNT(ProductID) AS ProductCount
-  FROM dbo.products 
-  GROUP BY CategoryID
-), DiscontinuedCounts AS (
--- get Count of discontinued products per category
-  SELECT
-    CategoryID,
-    COUNT(ProductID) AS DiscontinuedCount
-  FROM dbo.products
-  WHERE Discontinued = 1
-  GROUP BY CategoryID
-), AvgUnitPrices AS (
--- get Average Unit Price per category
-  SELECT
-    CategoryID,
-    AVG(UnitPrice) AS AvgUnitPrice
-  FROM dbo.products
-  GROUP BY CategoryID
-), final AS (
--- combine product counts, discontinued counts, and average unit prices per category
-  SELECT
-    pc.CategoryID,
-    pc.ProductCount,
-    dc.DiscontinuedCount,
-    aup.AvgUnitPrice
-  FROM ProductCounts pc
-  LEFT JOIN DiscontinuedCounts dc
-    ON pc.CategoryID = dc.CategoryID
-  LEFT JOIN AvgUnitPrices aup
-    ON pc.CategoryID = aup.CategoryID
+-- 11a. CTE approach
+WITH ProductCounts AS (  -- count of products per category
+	SELECT
+		CategoryID,
+		COUNT(ProductID) AS ProductCount
+	FROM dbo.Products
+	GROUP BY CategoryID
+), DiscontinuedCounts AS (  -- count of discontinued products per category
+	SELECT
+		CategoryID,
+		COUNT(ProductID) AS DiscontinuedCount
+	FROM dbo.Products
+	WHERE Discontinued = 1
+	GROUP BY CategoryID
+), AvgUnitPrices AS (  -- average unit price per category
+	SELECT
+		CategoryID,
+		AVG(UnitPrice) AS AvgUnitPrice
+	FROM dbo.Products
+	GROUP BY CategoryID
+), Final AS (  -- every category, with its counts and averages (if any)
+	SELECT
+		c.CategoryID,
+		c.CategoryName,
+		pc.ProductCount,
+		dc.DiscontinuedCount,
+		aup.AvgUnitPrice
+	FROM dbo.Categories c
+	LEFT JOIN ProductCounts pc
+		ON c.CategoryID = pc.CategoryID
+	LEFT JOIN DiscontinuedCounts dc
+		ON c.CategoryID = dc.CategoryID
+	LEFT JOIN AvgUnitPrices aup
+		ON c.CategoryID = aup.CategoryID
 )
-
 SELECT
-  CategoryID,
-  ProductCount,
-  COALESCE(DiscontinuedCount, 0) AS DiscontinuedCount,
-  ROUND(AvgUnitPrice, 2) AS AvgUnitPrice
-FROM final
+	CategoryID,
+	CategoryName,
+	COALESCE(ProductCount, 0) AS ProductCount,
+	COALESCE(DiscontinuedCount, 0) AS DiscontinuedCount,
+	ROUND(AvgUnitPrice, 2) AS AvgUnitPrice
+FROM Final;
 
--- alternative approach without CTEs
+-- 11b. Conditional aggregation approach
 SELECT
-  CategoryID,
-  COUNT(ProductID) AS ProductCount,
-  SUM(CASE WHEN Discontinued = 1 THEN 1 ELSE 0 END) AS DiscontinuedCount,
-  ROUND(AVG(UnitPrice), 2) AS AvgUnitPrice
-FROM dbo.products
-GROUP BY CategoryID
+	c.CategoryID,
+	c.CategoryName,
+	COUNT(p.ProductID) AS ProductCount,
+	SUM(CASE WHEN p.Discontinued = 1 THEN 1 ELSE 0 END) AS DiscontinuedCount,
+	ROUND(AVG(p.UnitPrice), 2) AS AvgUnitPrice
+FROM dbo.Categories c
+LEFT JOIN dbo.Products p
+	ON c.CategoryID = p.CategoryID
+GROUP BY c.CategoryID, c.CategoryName;
 
--- ============================================================
--- StrataScratch challenges (different schema, won't run against SqlPractice)
--- ============================================================
-
--- 11. Find all posts which were reacted to with a heart. For such posts output all columns from facebook_posts table.
+-- 12. Find all posts which were reacted to with a heart. For such posts output all columns from facebook_posts table.
 SELECT DISTINCT p.*
 FROM facebook_reactions r
 INNER JOIN facebook_posts p
 	ON r.post_id = p.post_id
 	AND r.reaction = 'heart';
 
--- 12. Calculate the number of shipments per month. The unique key for one shipment is a combination of shipment_id and sub_id. Output the year_month in format YYYY-MM and the number of shipments in that month.
+-- 13. Calculate the number of shipments per month. The unique key for one shipment is a combination of shipment_id and sub_id. Output the year_month in format YYYY-MM and the number of shipments in that month.
 WITH shipments AS (
 	SELECT
 		CAST(shipment_ID AS VARCHAR(50)) + CAST(sub_id AS VARCHAR(50)) AS ship_id,
@@ -236,7 +235,7 @@ SELECT
 FROM shipments
 GROUP BY year_month;
 
--- 13. Return the number of unique users per client for each month. Assume all events occur within the same year, so only month needs to be in the output as a number from 1 to 12.
+-- 14. Return the number of unique users per client for each month. Assume all events occur within the same year, so only month needs to be in the output as a number from 1 to 12.
 WITH client_counts AS (
 	SELECT
 		client_id,
@@ -251,3 +250,24 @@ SELECT
 FROM client_counts
 GROUP BY client_id, month_num;
 
+-- 15. Show monthly revenue for each year, plus a running year-to-date total that resets at the start of each year. Order by year, month.
+-- one row shows a month then a year. ( will be multiple months) and then a sum of the months year to date total
+-- First get monthly sum for each year
+WITH monthly_sum AS(
+  SELECT
+    YEAR(o.OrderDate) AS OrderYear,
+    MONTH(o.OrderDate) AS OrderMonth,
+    SUM(od.Quantity * od.UnitPrice) AS Total
+  FROM dbo.Orders o
+  INNER JOIN dbo.OrderDetails od
+    ON o.OrderID = od.OrderID 
+  GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate)
+)
+SELECT 
+  OrderYear,
+  OrderMonth,
+  Total,
+  -- We need to order by OrderMonth since we are partitioning the year. 
+  SUM(Total) OVER (PARTITION BY OrderYear ORDER BY OrderMonth) AS YTDRevenue 
+FROM monthly_sum
+ORDER BY OrderYear, OrderMonth;
